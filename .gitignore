@@ -1,29 +1,31 @@
-### IntelliJ IDEA ###
+# Java class files
+*.class
+
+# IntelliJ IDEA specific files
+.idea/
+*.iml
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# VS Code specific files
 .vscode/
 
-### Mac OS ###
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.~*
+hs_err_pid*
+
+# Operating system-specific files
 .DS_Store
+Thumbs.db
+
+# Generated files
+bin/
+gen/
+
+#OutSource files
+*.dll
+*.properties
