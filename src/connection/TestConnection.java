@@ -11,7 +11,7 @@ import dao.interfaces.CustomerDAO;
 import dao.impl.CustomerDAOImpl;
 import entities.Customer;
 
-public class TestDatabaseConnection {
+public class TestConnection {
     public static void main(String[] args) {
 
         Properties properties = new Properties();
