@@ -1,8 +1,10 @@
 package entities;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Order {
+
+    private int id;
     private int customerID;
     private Date createdDate;
     private Date closedDate;
@@ -10,14 +12,18 @@ public class Order {
 
     Order(){}
 
-    Order(int tCustomerID, Date tCreatedDate,
+    public Order(int tID, int tCustomerID, Date tCreatedDate,
           Date tClosedDate, String tStatus){
 
+        this.id = tID;
         this.customerID = tCustomerID;
         this.createdDate = tCreatedDate;
         this.closedDate = tClosedDate;
         this.status = tStatus;
     }
+
+    public int GetID() { return id; }
+    public void SetID(int tID) { this.id = tID; }
 
     public int GetCustomerID() { return this.customerID; }
     public void SetCustomerID(int tCustomerID){
