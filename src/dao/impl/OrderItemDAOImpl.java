@@ -1,10 +1,8 @@
 package dao.impl;
 
 import dao.interfaces.OrderItemDAO;
-import entities.Order;
 import entities.OrderItem;
 
-import javax.swing.plaf.BorderUIResource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +38,10 @@ public class OrderItemDAOImpl implements OrderItemDAO {
         List<OrderItem> orderItems = new ArrayList<>();
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
+
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
+
             while(resultSet.next()){
                 OrderItem orderItem = new OrderItem(
                         resultSet.getInt("id"),

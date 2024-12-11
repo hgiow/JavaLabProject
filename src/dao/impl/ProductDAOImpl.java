@@ -123,9 +123,4 @@ public class ProductDAOImpl implements ProductDAO {
             e.printStackTrace();
         }
     }
-
 }
-
-//
-
-////

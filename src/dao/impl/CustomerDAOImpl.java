@@ -39,10 +39,14 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Customer GetCustomer(int id){
+
         String sql = "SELECT * FROM Customers WHERE id = ?";
+
         try(PreparedStatement statement = connection.prepareStatement(sql)){
+
             statement.setInt(1,id);
             ResultSet resultSet = statement.executeQuery();
+
             if(resultSet.next()){
                 return new Customer(
                         resultSet.getString("firstName"),
@@ -61,6 +65,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public List<Customer> GetAllCustomers(){
+
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM Customers";
 
@@ -84,6 +89,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void UpdateCustomer(Customer customer){
+
         String sql = "UPDATE Customers SET first_name = ?, last_name = ?" +
                 "email = ?, password = ?, phone = ?, address = ? WHERE id = ?";
 
@@ -102,7 +108,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void DeleteCustomer(int id){
+
         String sql = "DELETE FROM Customers WHERE id = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1,id);
             statement.executeUpdate();
