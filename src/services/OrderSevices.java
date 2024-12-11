@@ -11,6 +11,7 @@ import entities.Product;
 import javax.print.attribute.standard.OutputDeviceAssigned;
 import java.sql.Connection;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrderSevices {
@@ -30,6 +31,47 @@ public class OrderSevices {
             instance = new OrderSevices(connection);
         }
         return instance;
+    }
+
+    public boolean ReduceStock(int productID, int quantity){
+
+        Product product = productDAO.GetProduct(productID);
+
+        if(product == null || product.GetQuantity() < quantity){
+            return false;
+        }
+
+        product.SetQuantity(product.GetQuantity() - quantity);
+        productDAO.UpdateProduct(product);
+        return true;
+    }
+
+    public boolean PlaceOrder(int customerId, int productId, int quantity) {
+
+        boolean isStockReduced = ReduceStock(productId, quantity);
+
+        if (!isStockReduced) {
+            return false;
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        Date sqlCurrentDate = Date.valueOf(currentDate);
+
+        Order order = new Order(customerId, sqlCurrentDate, null, "Pending");
+        orderDAO.AddOrder(order);
+
+        return true;
+    }
+
+    public void CloseOrder(int orderId){
+        Order order = orderDAO.GetOrder(orderId);
+        if(order != null){
+            LocalDate currentDate = LocalDate.now();
+            Date sqlCurrentDate = Date.valueOf(currentDate);
+            order.SetClosedDate(sqlCurrentDate);
+            order.SetStatus("Closed");
+            orderDAO.UpdateOrder(order);
+        }
     }
 
     public void AddOrder(Order order){
@@ -57,4 +99,7 @@ public class OrderSevices {
         return false;
     }
 
+    public List<Order> GetAllOrdersByProductID(int productID){
+        return orderDAO.GetOrdersByProductID(productID);
+    }
 }

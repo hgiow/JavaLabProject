@@ -11,5 +11,7 @@ public interface OrderDAO {
     Order GetOrder(int id);
     List<Order> GetOrdersByCustomer(int customerID);
     void DeleteOrder(Date date);
+    List<Order> GetOrdersByProductID(int productID);
+    void UpdateOrder(Order order);
 
 }

@@ -19,7 +19,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public void AddCustomer(Customer customer){
 
         String sql = "INSERT INTO Customers(first_name, last_name, " +
-                "email, password, phone, address) VALUES (?, ?, ?, ?, ?, ?)";
+                "email, password, phone, address, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
@@ -29,6 +29,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement.setString(4, customer.GetPassword());
             statement.setString(5, customer.GetPhone());
             statement.setString(6, customer.GetAddress());
+            statement.setString(7, customer.GetRole());
 
             statement.executeUpdate();
 
@@ -54,7 +55,8 @@ public class CustomerDAOImpl implements CustomerDAO {
                         resultSet.getString("email"),
                         resultSet.getString("password"),
                         resultSet.getString("phone"),
-                        resultSet.getString("address")
+                        resultSet.getString("address"),
+                        resultSet.getString("role")
                 );
             }
         } catch(SQLException e){
@@ -78,7 +80,8 @@ public class CustomerDAOImpl implements CustomerDAO {
                         resultSet.getString("email"),
                         resultSet.getString("password"),
                         resultSet.getString("phone"),
-                        resultSet.getString("address")
+                        resultSet.getString("address"),
+                        resultSet.getString("role")
                 ));
             }
         } catch (SQLException e){
@@ -91,7 +94,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public void UpdateCustomer(Customer customer){
 
         String sql = "UPDATE Customers SET first_name = ?, last_name = ?" +
-                "email = ?, password = ?, phone = ?, address = ? WHERE id = ?";
+                "email = ?, password = ?, phone = ?, address = ?, role = ? WHERE id = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, customer.GetFirstName());
@@ -100,7 +103,9 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement.setString(4, customer.GetPassword());
             statement.setString(5, customer.GetPhone());
             statement.setString(6, customer.GetAddress());
-            statement.setInt(7, customer.GetId());
+            statement.setString(7, customer.GetRole());
+            statement.setInt(8, customer.GetId());
+            statement.executeUpdate();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -117,6 +122,32 @@ public class CustomerDAOImpl implements CustomerDAO {
         } catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Customer GetCustomerByEmail(String email) {
+        String sql = "SELECT * FROM Customers WHERE email = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new Customer(
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("address"),
+                        resultSet.getString("role")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

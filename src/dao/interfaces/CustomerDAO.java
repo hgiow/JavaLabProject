@@ -10,5 +10,6 @@ public interface CustomerDAO {
     List<Customer> GetAllCustomers();
     void UpdateCustomer(Customer customer);
     void DeleteCustomer(int id);
+    Customer GetCustomerByEmail(String email);
 
 }

@@ -36,7 +36,7 @@ public class TestConnection {
             CustomerDAO customerDAO = new CustomerDAOImpl(conn);
 
             Customer newCustomer = new Customer("John", "Doe", "john.doe@example.com",
-                    "securepassword", "123456789", "123 Main St");
+                    "securepassword", "123456789", "123 Main St", "user");
 
             customerDAO.AddCustomer(newCustomer);
 

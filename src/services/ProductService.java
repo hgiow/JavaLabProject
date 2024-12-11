@@ -24,19 +24,6 @@ public class ProductService {
         return instance;
     }
 
-    public boolean ReduceStock(int productID,int quantity){
-
-        Product product = productDAO.GetProduct(productID);
-
-        if(product == null || product.GetQuantity() < quantity){
-            return false;
-        }
-
-        product.SetQuantity(product.GetQuantity() - quantity);
-        productDAO.UpdateProduct(product);
-        return true;
-    }
-
     public void AddProduct(Product product){
         productDAO.AddProduct(product);
     }

@@ -12,10 +12,9 @@ public class Order {
 
     Order(){}
 
-    public Order(int tID, int tCustomerID, Date tCreatedDate,
+    public Order(int tCustomerID, Date tCreatedDate,
           Date tClosedDate, String tStatus){
 
-        this.id = tID;
         this.customerID = tCustomerID;
         this.createdDate = tCreatedDate;
         this.closedDate = tClosedDate;
