@@ -29,3 +29,6 @@ gen/
 #OutSource files
 *.dll
 *.properties
+
+#Tests
+target/

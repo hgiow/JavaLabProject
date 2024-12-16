@@ -16,6 +16,10 @@ public class CustomerService {
         customerDAO = new CustomerDAOImpl(connection);
     }
 
+    public static void resetInstance(){
+        instance = null;
+    }
+
     public static CustomerService getInstance(Connection connection) {
         if (instance == null){
             instance = new CustomerService(connection);
@@ -44,4 +48,15 @@ public class CustomerService {
         return customerDAO.GetCustomer(id);
     }
 
+    public Customer GetCustomerByEmail(String email){
+        return customerDAO.GetCustomerByEmail(email);
+    }
+
+    public void DeleteCustomer(int id){
+        customerDAO.DeleteCustomer(id);
+    }
+
+    public void UpdateCustomer(Customer customer){
+        customerDAO.UpdateCustomer(customer);
+    }
 }

@@ -8,7 +8,6 @@ import entities.Order;
 import entities.OrderItem;
 import entities.Product;
 
-import javax.print.attribute.standard.OutputDeviceAssigned;
 import java.sql.Connection;
 import java.sql.Date;
 import java.time.LocalDate;
