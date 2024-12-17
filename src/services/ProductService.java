@@ -24,12 +24,16 @@ public class ProductService {
         return instance;
     }
 
+    public static void resetInstance(){
+        instance = null;
+    }
+
     public void AddProduct(Product product){
         productDAO.AddProduct(product);
     }
 
-    public Product GetProduct(int id){
-        return productDAO.GetProduct(id);
+    public Product GetProductByID(int id){
+        return productDAO.GetProductByID(id);
     }
 
     public List<Product> GetAllProduct(){
@@ -41,6 +45,14 @@ public class ProductService {
     }
 
     public void DeleleProduct(int id){
+        productDAO.DeleteProduct(id);
+    }
+
+    public Product GetProductByName(String name){
+        return productDAO.GetProductByName(name);
+    }
+
+    public void DeleteProduct(int id){
         productDAO.DeleteProduct(id);
     }
 }

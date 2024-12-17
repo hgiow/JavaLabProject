@@ -39,7 +39,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product GetProduct(int id){
+    public Product GetProductByID(int id){
 
         String sql = "SELECT * FROM Product WHERE id = ?";
 
@@ -49,18 +49,18 @@ public class ProductDAOImpl implements ProductDAO {
 
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                return new Product(
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        resultSet.getBigDecimal("price"),
-                        resultSet.getInt("quantity")
-                );
+                Product product = new Product();
+                product.SetQuantity(resultSet.getInt("quantity"));
+                product.SetPrice(resultSet.getBigDecimal("price"));
+                product.SetDescription(resultSet.getString("description"));
+                product.SetName(resultSet.getString("name"));
+                product.SetID(resultSet.getInt("id"));
+                return product;
             }
 
         } catch (SQLException e){
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -76,6 +76,7 @@ public class ProductDAOImpl implements ProductDAO {
 
             while(resultSet.next()){
                 products.add(new Product(
+                        resultSet.getInt("id"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getBigDecimal("price"),
@@ -91,20 +92,21 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void UpdateProduct(Product tProduct){
+    public void UpdateProduct(Product product) {
 
-        String sql = "UPDATE Product SET name = ?, description = ?, price = ?, quantity = ?" +
-                "WHERE id = ?";
+        String sql = "UPDATE Product SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?";
 
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1,tProduct.GetName());
-            statement.setString(2,tProduct.GetDescription());
-            statement.setBigDecimal(3,tProduct.GetPrice());
-            statement.setInt(4,tProduct.GetQuantity());
+            statement.setString(1, product.GetName());
+            statement.setString(2, product.GetDescription());
+            statement.setBigDecimal(3, product.GetPrice());
+            statement.setInt(4, product.GetQuantity());
+            statement.setInt(5, product.GetID());
+
             statement.executeUpdate();
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -122,5 +124,32 @@ public class ProductDAOImpl implements ProductDAO {
         }catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Product GetProductByName(String name) {
+
+        String sql = "SELECT * FROM Product WHERE name = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+
+                Product product = new Product();
+                product.SetQuantity(resultSet.getInt("quantity"));
+                product.SetPrice(resultSet.getBigDecimal("price"));
+                product.SetDescription(resultSet.getString("description"));
+                product.SetName(resultSet.getString("name"));
+                product.SetID(resultSet.getInt("id"));
+
+                return product;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

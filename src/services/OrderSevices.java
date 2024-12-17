@@ -34,7 +34,7 @@ public class OrderSevices {
 
     public boolean ReduceStock(int productID, int quantity){
 
-        Product product = productDAO.GetProduct(productID);
+        Product product = productDAO.GetProductByID(productID);
 
         if(product == null || product.GetQuantity() < quantity){
             return false;
@@ -90,7 +90,7 @@ public class OrderSevices {
     }
 
     public boolean CheckStock(OrderItem orderItem){
-        Product product = productDAO.GetProduct(orderItem.GetProductID());
+        Product product = productDAO.GetProductByID(orderItem.GetProductID());
         if(product != null){
             int stock = product.GetQuantity();
             return stock >= orderItem.GetQuantity();

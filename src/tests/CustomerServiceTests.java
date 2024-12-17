@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 
 import static connection.GetConnection.GetDBConnection;
 import static org.junit.Assert.assertEquals;
@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import services.CustomerService;
 
-public class CustomerTests {
+public class CustomerServiceTests {
 
     private Connection conn;
     private CustomerService customerService;

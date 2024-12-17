@@ -4,46 +4,41 @@ import java.math.BigDecimal;
 
 public class Product {
 
+    private int id;
     private String name;
     private String description;
     private BigDecimal price;
     private int quantity;
 
-    Product(){}
+    public Product() {};
 
-    public Product(String tName, String tDescription,
-            BigDecimal tPrice,int tQuantity){
-
-        this.name = tName;
-        this.description = tDescription;
-        this.price = tPrice;
-        this.quantity = tQuantity;
-
+    public Product(int id, String name, String description, BigDecimal price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 
-    public String GetName(){
-        return this.name;
-    }
-    public void SetName(String tName){
-        this.name = tName;
-    }
-
-    public String GetDescription(){
-        return this.description;
-    }
-    public void SetDescription(String tDescription){
-        this.description = tDescription;
+    public Product(String name, String description, BigDecimal price, int quantity) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 
-    public BigDecimal GetPrice(){
-        return this.price;
-    }
-    public void SetPrice(BigDecimal tPrice){
-        this.price = tPrice;
-    }
+    public int GetID() { return id; }
+    public void SetID(int id) { this.id = id; }
 
-    public int GetQuantity() { return this.quantity; }
-    public void SetQuantity(int tQuantity){
-        this.quantity = tQuantity;
-    }
+    public String GetName() { return name; }
+    public void SetName(String name) { this.name = name; }
+
+    public String GetDescription() { return description; }
+    public void SetDescription(String description) { this.description = description; }
+
+    public BigDecimal GetPrice() { return price; }
+    public void SetPrice(BigDecimal price) { this.price = price; }
+
+    public int GetQuantity() { return quantity; }
+    public void SetQuantity(int quantity) { this.quantity = quantity; }
 }
