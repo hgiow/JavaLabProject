@@ -1,8 +1,10 @@
 package services;
 
 import dao.impl.OrderDAOImpl;
+import dao.impl.OrderItemDAOImpl;
 import dao.impl.ProductDAOImpl;
 import dao.interfaces.OrderDAO;
+import dao.interfaces.OrderItemDAO;
 import dao.interfaces.ProductDAO;
 import entities.Order;
 import entities.OrderItem;
@@ -10,24 +12,27 @@ import entities.Product;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-public class OrderSevices {
+public class OrderServices {
 
-    private static OrderSevices instance;
+    private static OrderServices instance;
     private final OrderDAO orderDAO;
     private ProductDAO productDAO;
+    private OrderItemDAO orderItemDAO;
 
-    private OrderSevices(Connection connection){
+    private OrderServices(Connection connection){
         orderDAO = new OrderDAOImpl(connection);
         this.productDAO = new ProductDAOImpl(connection);
+        this.orderItemDAO = new OrderItemDAOImpl(connection);
     }
 
-    public static OrderSevices getInstance(Connection connection){
+    public static OrderServices getInstance(Connection connection){
 
         if(instance == null){
-            instance = new OrderSevices(connection);
+            instance = new OrderServices(connection);
         }
         return instance;
     }
@@ -45,10 +50,9 @@ public class OrderSevices {
         return true;
     }
 
-    public boolean PlaceOrder(int customerId, int productId, int quantity) {
+    public boolean PlaceOrder(int customerId, int productId, int quantity) throws SQLException {
 
         boolean isStockReduced = ReduceStock(productId, quantity);
-
         if (!isStockReduced) {
             return false;
         }
@@ -63,7 +67,8 @@ public class OrderSevices {
     }
 
     public void CloseOrder(int orderId){
-        Order order = orderDAO.GetOrder(orderId);
+
+        Order order = orderDAO.GetOrderByID(orderId);
         if(order != null){
             LocalDate currentDate = LocalDate.now();
             Date sqlCurrentDate = Date.valueOf(currentDate);
@@ -73,12 +78,12 @@ public class OrderSevices {
         }
     }
 
-    public void AddOrder(Order order){
+    public void AddOrder(Order order) throws SQLException{
         orderDAO.AddOrder(order);
     }
 
-    public Order GetOrder(int id){
-        return orderDAO.GetOrder(id);
+    public Order GetOrderByID(int id){
+        return orderDAO.GetOrderByID(id);
     }
 
     public List<Order> GetOrdersByCustomer(int customerID){
@@ -86,7 +91,7 @@ public class OrderSevices {
     }
 
     public void DeleteOrdersByDate(Date date){
-        orderDAO.DeleteOrder(date);
+        orderDAO.DeleteOrdersBeforeDate(date);
     }
 
     public boolean CheckStock(OrderItem orderItem){
@@ -99,6 +104,26 @@ public class OrderSevices {
     }
 
     public List<Order> GetAllOrdersByProductID(int productID){
-        return orderDAO.GetOrdersByProductID(productID);
+        return orderItemDAO.GetOrdersByProductID(productID);
+    }
+
+    public void UpdateOrder(Order order){
+        orderDAO.UpdateOrder(order);
+    }
+
+    public void DeleteOrder(int id){
+        orderDAO.DeleteOrderByID(id);
+    }
+
+    public Order GetOrderByCustomerAndDate(int customerID, Date createdDate) throws SQLException {
+        return orderDAO.GetOrderByCustomerAndDate(customerID, createdDate);
+    }
+
+    public void AddOrderItem(OrderItem orderItem){
+        orderItemDAO.AddOrderItem(orderItem);
+    }
+
+    public void DeleteOrdersBeforeDate(Date date){
+        orderDAO.DeleteOrdersBeforeDate(date);
     }
 }

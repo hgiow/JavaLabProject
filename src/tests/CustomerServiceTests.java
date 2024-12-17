@@ -12,18 +12,18 @@ import entities.Customer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import services.CustomerService;
+import services.CustomerServices;
 
 public class CustomerServiceTests {
 
     private Connection conn;
-    private CustomerService customerService;
+    private CustomerServices customerService;
 
     @Before
     public void SetUp() throws SQLException {
         conn = GetDBConnection();
-        CustomerService.resetInstance();
-        customerService = CustomerService.getInstance(conn);
+        CustomerServices.resetInstance();
+        customerService = CustomerServices.getInstance(conn);
     }
 
     @After
@@ -31,6 +31,27 @@ public class CustomerServiceTests {
         if (conn != null && !conn.isClosed()) {
             conn.close();
         }
+    }
+
+    @Test
+    public void TestUpdateCustomer() throws SQLException {
+
+        Customer newCustomer = new Customer("Jane", "Doe", "jane.doe@example.com",
+                "password", "123123123", "789 Pine St", "user");
+
+        customerService.AddCustomer(newCustomer);
+
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
+        assertNotNull(retrievedCustomer);
+
+        retrievedCustomer.SetFirstName("Janet");
+
+        customerService.UpdateCustomer(retrievedCustomer);
+
+        Customer updatedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
+
+        assertNotNull(updatedCustomer);
+        assertEquals("Janet", updatedCustomer.GetFirstName());
     }
 
     @Test
@@ -60,29 +81,10 @@ public class CustomerServiceTests {
         Customer retrievedCustomer = customerService.GetCustomerByEmail("john.doe@example.com");
         assertNotNull(retrievedCustomer);
 
-        Customer customerById = customerService.GetCustomer(retrievedCustomer.GetId());
+        Customer customerById = customerService.GetCustomer(retrievedCustomer.GetID());
         assertNotNull(customerById);
         assertEquals("John", customerById.GetFirstName());
         assertEquals("Doe", customerById.GetLastName());
-    }
-
-    @Test
-    public void TestUpdateCustomer() throws SQLException {
-
-        Customer newCustomer = new Customer("Jane", "Doe", "jane.doe@example.com",
-                "password", "123123123", "789 Pine St", "user");
-
-        customerService.AddCustomer(newCustomer);
-
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
-        assertNotNull(retrievedCustomer);
-
-        retrievedCustomer.SetFirstName("Janet");
-        customerService.UpdateCustomer(retrievedCustomer);
-
-        Customer updatedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
-        assertNotNull(updatedCustomer);
-        assertEquals("Janet", updatedCustomer.GetFirstName());
     }
 
     @Test
@@ -96,7 +98,7 @@ public class CustomerServiceTests {
         Customer retrievedCustomer = customerService.GetCustomerByEmail("alice.smith@example.com");
         assertNotNull(retrievedCustomer);
 
-        customerService.DeleteCustomer(retrievedCustomer.GetId());
+        customerService.DeleteCustomer(retrievedCustomer.GetID());
 
         Customer deletedCustomer = customerService.GetCustomerByEmail("alice.smith@example.com");
         assertNull(deletedCustomer);

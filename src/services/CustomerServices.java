@@ -7,12 +7,12 @@ import entities.Customer;
 import java.sql.Connection;
 import java.util.List;
 
-public class CustomerService {
+public class CustomerServices {
 
-    private static CustomerService instance;
+    private static CustomerServices instance;
     private CustomerDAO customerDAO;
 
-    private CustomerService(Connection connection){
+    private CustomerServices(Connection connection){
         customerDAO = new CustomerDAOImpl(connection);
     }
 
@@ -20,9 +20,9 @@ public class CustomerService {
         instance = null;
     }
 
-    public static CustomerService getInstance(Connection connection) {
+    public static CustomerServices getInstance(Connection connection) {
         if (instance == null){
-            instance = new CustomerService(connection);
+            instance = new CustomerServices(connection);
         }
         return instance;
     }

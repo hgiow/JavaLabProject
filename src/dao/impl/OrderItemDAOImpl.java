@@ -1,6 +1,7 @@
 package dao.impl;
 
 import dao.interfaces.OrderItemDAO;
+import entities.Order;
 import entities.OrderItem;
 
 import java.sql.*;
@@ -18,14 +19,16 @@ public class OrderItemDAOImpl implements OrderItemDAO {
     @Override
     public void AddOrderItem(OrderItem orderItem){
 
-        String sql = "INSERT INTO OrderItems (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO OrderItem (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
+
             statement.setInt(1,orderItem.GetOrderID());
             statement.setInt(2,orderItem.GetProductID());
             statement.setInt(3,orderItem.GetQuantity());
             statement.setBigDecimal(4,orderItem.GetPrice());
             statement.executeUpdate();
+
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -85,5 +88,30 @@ public class OrderItemDAOImpl implements OrderItemDAO {
         } catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Order> GetOrdersByProductID(int productID) {
+        String sql = "SELECT o.* FROM Orders o WHERE o.order_id IN (SELECT oi.order_id " +
+                "FROM OrderItem oi WHERE oi.product_id = ?)";
+
+        List<Order> orders = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, productID);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orders.add(new Order(
+                        resultSet.getInt("order_id"),
+                        resultSet.getInt("customer_id"),
+                        resultSet.getDate("created_date"),
+                        resultSet.getDate("closed_date"),
+                        resultSet.getString("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
     }
 }

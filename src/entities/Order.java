@@ -10,15 +10,24 @@ public class Order {
     private Date closedDate;
     private String status;
 
-    Order(){}
+    public Order(){}
 
-    public Order(int tCustomerID, Date tCreatedDate,
-          Date tClosedDate, String tStatus){
+    public Order(int customerID, Date createdDate,
+          Date closedDate, String status){
 
-        this.customerID = tCustomerID;
-        this.createdDate = tCreatedDate;
-        this.closedDate = tClosedDate;
-        this.status = tStatus;
+        this.customerID = customerID;
+        this.createdDate = createdDate;
+        this.closedDate = closedDate;
+        this.status = status;
+    }
+
+    public Order(int id, int customerID, Date createdDate,
+                 Date closedDate, String status){
+
+        this.customerID = customerID;
+        this.createdDate = createdDate;
+        this.closedDate = closedDate;
+        this.status = status;
     }
 
     public int GetID() { return id; }

@@ -38,7 +38,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public Customer GetCustomer(int id) {
 
-        String sql = "SELECT * FROM Customers WHERE id = ?";
+        String sql = "SELECT * FROM Customers WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -79,8 +79,12 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void UpdateCustomer(Customer customer) {
-        String sql = "UPDATE Customers SET first_name = ?, last_name = ?, email = ?, password = ?, phone = ?, address = ?, role = ? WHERE id = ?";
+
+        String sql = "UPDATE Customers SET first_name = ?, last_name = ?, email = ?, " +
+                "password = ?, phone = ?, address = ?, role = ? WHERE customer_id = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, customer.GetFirstName());
             statement.setString(2, customer.GetLastName());
             statement.setString(3, customer.GetEmail());
@@ -88,9 +92,9 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement.setString(5, customer.GetPhone());
             statement.setString(6, customer.GetAddress());
             statement.setString(7, customer.GetRole());
-            statement.setInt(8, customer.GetId());
-            int rowsUpdated = statement.executeUpdate();
-            System.out.println("Rows updated: " + rowsUpdated);
+            statement.setInt(8, customer.GetID());
+            statement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,12 +103,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public void DeleteCustomer(int id) {
 
-        String sql = "DELETE FROM Customers WHERE id = ?";
+        String sql = "DELETE FROM Customers WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
-            int rowsDeleted = statement.executeUpdate();
-            System.out.println("Rows deleted: " + rowsDeleted);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,6 +119,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         String sql = "SELECT * FROM Customers WHERE email = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -130,7 +134,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     private Customer mapResultSetToCustomer(ResultSet resultSet) throws SQLException {
 
         Customer customer = new Customer();
-        customer.SetId(resultSet.getInt("id"));
+
+        customer.GetID(resultSet.getInt("customer_id"));
         customer.SetFirstName(resultSet.getString("first_name"));
         customer.SetLastName(resultSet.getString("last_name"));
         customer.SetEmail(resultSet.getString("email"));

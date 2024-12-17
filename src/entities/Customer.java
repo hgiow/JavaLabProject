@@ -13,23 +13,23 @@ public class Customer {
 
     public Customer() {}
 
-    public Customer(String tFirstName, String tLastName, String tEmail,
-                    String tPassword, String tPhone, String tAddress, String role) {
+    public Customer(String firstName, String lastName, String email,
+                    String password, String phone, String address, String role) {
 
-        this.firstName = tFirstName;
-        this.lastName = tLastName;
-        this.email = tEmail;
-        this.password = tPassword;
-        this.phone = tPhone;
-        this.address = tAddress;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
         this.role = role;
 
     }
 
-    public int GetId() {
+    public int GetID() {
         return this.id;
     }
-    public void SetId(int tId) {
+    public void GetID(int tId) {
         this.id = tId;
     }
 

@@ -7,19 +7,19 @@ import entities.Product;
 import java.sql.Connection;
 import java.util.List;
 
-public class ProductService {
+public class ProductServices {
 
-    private static ProductService instance;
+    private static ProductServices instance;
     private final ProductDAO productDAO;
 
-    private ProductService(Connection connection){
+    private ProductServices(Connection connection){
         productDAO = new ProductDAOImpl(connection);
     }
 
-    public static ProductService getInstance(Connection connection){
+    public static ProductServices getInstance(Connection connection){
 
         if(instance == null){
-            instance = new ProductService(connection);
+            instance = new ProductServices(connection);
         }
         return instance;
     }

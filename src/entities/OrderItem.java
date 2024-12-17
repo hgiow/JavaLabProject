@@ -12,14 +12,24 @@ public class OrderItem {
 
     OrderItem(){}
 
-    public OrderItem(int tID, int tOrderID, int tProductID,
-              int tQuantity, BigDecimal tPrice){
+    public OrderItem(int orderID, int productID,
+              int quantity, BigDecimal price){
 
-        this.id = tID;
-        this.price = tPrice;
-        this.orderID = tOrderID;
-        this.productID = tProductID;
-        this.quantity = tQuantity;
+        this.price = price;
+        this.orderID = orderID;
+        this.productID = productID;
+        this.quantity = quantity;
+
+    }
+
+    public OrderItem(int id,int orderID, int productID,
+                     int quantity, BigDecimal price){
+
+        this.id = id;
+        this.price = price;
+        this.orderID = orderID;
+        this.productID = productID;
+        this.quantity = quantity;
 
     }
 

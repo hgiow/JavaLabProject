@@ -13,18 +13,18 @@ import entities.Product;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import services.ProductService;
+import services.ProductServices;
 
 public class ProductServiceTests {
 
     private Connection conn;
-    private ProductService productService;
+    private ProductServices productService;
 
     @Before
     public void SetUp() throws SQLException {
         conn = GetDBConnection();
-        ProductService.resetInstance();
-        productService = ProductService.getInstance(conn);
+        ProductServices.resetInstance();
+        productService = ProductServices.getInstance(conn);
     }
 
     @After
@@ -37,10 +37,10 @@ public class ProductServiceTests {
     @Test
     public void TestAddProduct() throws SQLException {
 
-        Product newProduct = new Product("Laptop", "High-end gaming laptop", new BigDecimal("1500.00"), 10);
+        Product newProduct = new Product("Laptop", "High-end gaming laptop",
+                new BigDecimal("1500.00"), 10);
 
         productService.AddProduct(newProduct);
-
         Product retrievedProduct = productService.GetProductByName("Laptop");
 
         assertNotNull(retrievedProduct);
