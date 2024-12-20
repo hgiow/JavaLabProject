@@ -29,12 +29,16 @@ public class OrderServices {
         this.orderItemDAO = new OrderItemDAOImpl(connection);
     }
 
-    public static OrderServices getInstance(Connection connection){
+    public static OrderServices GetInstance(Connection connection){
 
         if(instance == null){
             instance = new OrderServices(connection);
         }
         return instance;
+    }
+
+    public static void ResetInstance(){
+        instance = null;
     }
 
     public boolean ReduceStock(int productID, int quantity){

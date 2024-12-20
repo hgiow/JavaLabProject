@@ -16,7 +16,7 @@ public class CustomerServices {
         customerDAO = new CustomerDAOImpl(connection);
     }
 
-    public static void resetInstance(){
+    public static void ResetInstance(){
         instance = null;
     }
 

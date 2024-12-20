@@ -29,6 +29,5 @@ gen/
 #OutSource files
 *.dll
 *.properties
-
-#tests
 target/
+*.jar

@@ -71,8 +71,10 @@ public class OrderDAOImpl implements OrderDAO {
         List<Order> orders = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(sql)){
+
             statement.setInt(1, customerID);
             ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()){
                 orders.add(new Order(
                         resultSet.getInt("customer_id"),
@@ -137,7 +139,9 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public Order GetOrderByCustomerAndDate(int customerId, Date createdDate) throws SQLException {
+
         String sql = "SELECT * FROM Orders WHERE customer_id = ? AND created_date = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, customerId);
             statement.setDate(2, createdDate);

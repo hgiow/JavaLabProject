@@ -24,7 +24,7 @@ public class ProductServices {
         return instance;
     }
 
-    public static void resetInstance(){
+    public static void ResetInstance(){
         instance = null;
     }
 

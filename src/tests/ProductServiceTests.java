@@ -23,7 +23,7 @@ public class ProductServiceTests {
     @Before
     public void SetUp() throws SQLException {
         conn = GetDBConnection();
-        ProductServices.resetInstance();
+        ProductServices.ResetInstance();
         productService = ProductServices.getInstance(conn);
     }
 

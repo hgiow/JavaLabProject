@@ -4,6 +4,7 @@ import entities.Customer;
 import entities.Order;
 import entities.OrderItem;
 import entities.Product;
+import org.junit.After;
 import services.CustomerServices;
 import services.OrderServices;
 import services.ProductServices;
@@ -11,9 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,14 +25,76 @@ public class OrderServiceTests {
     private ProductServices productService;
     private CustomerServices customerService;
 
+    private Connection conn;
+
     @Before
-    public void setUp() throws SQLException {
+    public void SetUp() throws SQLException {
 
-        Connection connection = GetDBConnection();
+        conn = GetDBConnection();
 
-        orderServices = OrderServices.getInstance(connection);
-        productService = ProductServices.getInstance(connection);
-        customerService = CustomerServices.getInstance(connection);
+        OrderServices.ResetInstance();
+        orderServices = OrderServices.GetInstance(conn);
+
+        ProductServices.ResetInstance();
+        productService = ProductServices.getInstance(conn);
+
+        CustomerServices.ResetInstance();
+        customerService = CustomerServices.getInstance(conn);
+    }
+
+    @After
+    public void TearDown() throws SQLException {
+
+        String sql1 = "DELETE FROM customers;";
+        PreparedStatement statement1 = conn.prepareStatement(sql1);
+        statement1.executeUpdate();
+
+        String sql2 = "DELETE FROM product;";
+        PreparedStatement statement2 = conn.prepareStatement(sql2);
+        statement2.executeUpdate();
+
+        String sql3 = "DELETE FROM orderitem;";
+        PreparedStatement statement3 = conn.prepareStatement(sql3);
+        statement3.executeUpdate();
+
+        String sql4 = "DELETE FROM orders;";
+        PreparedStatement statement4 = conn.prepareStatement(sql4);
+        statement4.executeUpdate();
+
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
+    }
+
+    @Test
+    public void TestCloseOrder() throws SQLException {
+
+        Customer newCustomer = new Customer("Nikita", "PowerOfSoul", "nikita13.doe@example.com",
+                "password123", "1234567890", "456 Main St", "user");
+
+        customerService.AddCustomer(newCustomer);
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("nikita13.doe@example.com");
+
+        assertNotNull(retrievedCustomer);
+
+        LocalDate currentDate = LocalDate.now();
+        Date sqlCurrentDate = Date.valueOf(currentDate);
+
+        Order newOrder = new Order(retrievedCustomer.GetID(), sqlCurrentDate, null, "Pending");
+        orderServices.AddOrder(newOrder);
+
+        Order orderToClose = orderServices.GetOrderByCustomerAndDate(retrievedCustomer.GetID(), sqlCurrentDate);
+
+        assertNotNull(orderToClose);
+
+        orderServices.CloseOrder(orderToClose.GetID());
+
+        Order closedOrder = orderServices.GetOrderByCustomerAndDate(retrievedCustomer.GetID(), sqlCurrentDate);
+
+        System.out.println(closedOrder.GetStatus());
+
+        assertNotNull(closedOrder);
+        assertEquals("Closed", closedOrder.GetStatus());
     }
 
     @Test
@@ -116,12 +177,12 @@ public class OrderServiceTests {
     @Test
     public void TestAddOrder() throws SQLException {
 
-        Customer newCustomer = new Customer("John", "Doe", "john.doe@example.com",
+        Customer newCustomer = new Customer("Jack", "Doe", "jack.doe@example.com",
                 "password123", "1234567890", "123 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
 
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("john.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("jack.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -166,12 +227,12 @@ public class OrderServiceTests {
     @Test
     public void TestUpdateOrder() throws SQLException {
 
-        Customer newCustomer = new Customer("John", "Doe", "john.doe@example.com",
+        Customer newCustomer = new Customer("Legenda", "Doe", "lega.doe@example.com",
                 "password123", "1234567890", "123 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
 
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("john.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("lega.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -194,12 +255,12 @@ public class OrderServiceTests {
     @Test
     public void TestDeleteOrder() throws SQLException {
 
-        Customer newCustomer = new Customer("John", "Doe", "john.doe@example.com",
+        Customer newCustomer = new Customer("Abauenda", "Doe", "abauenda.doe@example.com",
                 "password123", "1234567890", "123 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
 
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("john.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("abauenda.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -213,11 +274,7 @@ public class OrderServiceTests {
 
         assertNotNull(retrievedOrder);
 
-        System.out.println("Order ID before deletion = " + newOrder.GetID());
-
         orderServices.DeleteOrder(newOrder.GetID());
-
-        System.out.println("Order ID after deletion = " + newOrder.GetID());
 
         Order deletedOrder = orderServices.GetOrderByID(newOrder.GetID());
 
@@ -251,11 +308,11 @@ public class OrderServiceTests {
 
         assertNotNull(retrievedProduct);
 
-        Customer newCustomer = new Customer("John", "Doe", "john.doe@example.com",
+        Customer newCustomer = new Customer("Bebra", "Hue", "bebra.doe@example.com",
                 "password123", "1234567890", "123 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("john.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("bebra.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -265,42 +322,13 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void TestCloseOrder() throws SQLException {
-
-        Customer newCustomer = new Customer("Jane", "Doe", "jane.doe@example.com",
-                "password123", "1234567890", "456 Main St", "user");
-
-        customerService.AddCustomer(newCustomer);
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
-
-        assertNotNull(retrievedCustomer);
-
-        LocalDate currentDate = LocalDate.now();
-        Date sqlCurrentDate = Date.valueOf(currentDate);
-
-        Order newOrder = new Order(retrievedCustomer.GetID(), sqlCurrentDate, null, "Pending");
-        orderServices.AddOrder(newOrder);
-
-        Order orderToClose = orderServices.GetOrderByCustomerAndDate(retrievedCustomer.GetID(), sqlCurrentDate);
-
-        assertNotNull(orderToClose);
-
-        orderServices.CloseOrder(orderToClose.GetID());
-
-        Order closedOrder = orderServices.GetOrderByCustomerAndDate(retrievedCustomer.GetID(), sqlCurrentDate);
-
-        assertNotNull(closedOrder);
-        assertEquals("Closed", closedOrder.GetStatus());
-    }
-
-    @Test
     public void TestGetOrdersByCustomer() throws SQLException {
 
-        Customer newCustomer = new Customer("Jane", "Doe", "jane.doe@example.com",
+        Customer newCustomer = new Customer("Lucy", "Doe", "lucy.doe@example.com",
                 "password123", "1234567890", "456 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("lucy.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -348,14 +376,12 @@ public class OrderServiceTests {
 
         assertNotNull(retrievedProduct);
 
-        System.out.println("ID product = " + retrievedProduct.GetID());
-
-        Customer newCustomer = new Customer("Jane", "Doe", "jane.doe@example.com",
+        Customer newCustomer = new Customer("samara", "Doe", "samara.doe@example.com",
                 "password123", "1234567890", "456 Main St", "user");
 
         customerService.AddCustomer(newCustomer);
 
-        Customer retrievedCustomer = customerService.GetCustomerByEmail("jane.doe@example.com");
+        Customer retrievedCustomer = customerService.GetCustomerByEmail("samara.doe@example.com");
 
         assertNotNull(retrievedCustomer);
 
@@ -373,9 +399,6 @@ public class OrderServiceTests {
                 5, new BigDecimal("100.00"));
 
         orderServices.AddOrderItem(orderItem);
-
-
-        System.out.println("Product ID = " + retrievedProduct.GetID());
 
         List<Order> orders = orderServices.GetAllOrdersByProductID(retrievedProduct.GetID());
 

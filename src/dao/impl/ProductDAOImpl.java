@@ -41,7 +41,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product GetProductByID(int id){
 
-        String sql = "SELECT * FROM Product WHERE id = ?";
+        String sql = "SELECT * FROM Product WHERE product_id = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
 
@@ -54,7 +54,7 @@ public class ProductDAOImpl implements ProductDAO {
                 product.SetPrice(resultSet.getBigDecimal("price"));
                 product.SetDescription(resultSet.getString("description"));
                 product.SetName(resultSet.getString("name"));
-                product.SetID(resultSet.getInt("id"));
+                product.SetID(resultSet.getInt("product_id"));
                 return product;
             }
 
@@ -76,7 +76,7 @@ public class ProductDAOImpl implements ProductDAO {
 
             while(resultSet.next()){
                 products.add(new Product(
-                        resultSet.getInt("id"),
+                        resultSet.getInt("product_id"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getBigDecimal("price"),
@@ -94,7 +94,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public void UpdateProduct(Product product) {
 
-        String sql = "UPDATE Product SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?";
+        String sql = "UPDATE Product SET name = ?, description = ?, price = ?, quantity = ? WHERE product_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -114,7 +114,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public void DeleteProduct(int id){
 
-        String sql = "DELETE FROM Product WHERE id = ?";
+        String sql = "DELETE FROM Product WHERE product_id = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
 
@@ -143,7 +143,7 @@ public class ProductDAOImpl implements ProductDAO {
                 product.SetPrice(resultSet.getBigDecimal("price"));
                 product.SetDescription(resultSet.getString("description"));
                 product.SetName(resultSet.getString("name"));
-                product.SetID(resultSet.getInt("id"));
+                product.SetID(resultSet.getInt("product_id"));
 
                 return product;
             }
